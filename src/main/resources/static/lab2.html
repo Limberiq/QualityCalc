@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPZ</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7e8d5;
+}
+
+h1 {
+    color: #33475b; /* Тёмно-серо-синий */
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.panel h2 {
+    font-size: 12px; /* Уменьшение размера заголовков */
+    margin-bottom: 10px;
+    text-align: center; /* Центровка заголовка панели */
+}
+.panel h3 {
+    margin-top: 0; /* Убираем лишний отступ сверху */
+}
+
+.panel input {
+    width: auto; /* Убираем фиксированную ширину для полей ввода */
+}
+
+.block {
+    background-color: #5a6e73; /* Мягкий серо-синий */
+    color: #ffffff;
+    padding: 12px;
+    width: calc(33% - 20px); /* Задает ширину блоков, оставляя отступы */
+    margin: 10px; /* Отступ вокруг каждого блока */
+    border-radius: 6px;
+    box-sizing: border-box; /* Учитывает отступы и границы в ширине */
+}
+
+.panel {
+    flex: 1 1 300px;
+    max-width: 400px;
+    height: 690px;
+    background-color: #ffffff;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    word-wrap: break-word; /* Перенос слов на новую строку */
+    overflow: auto; /* Предотвращение выхода текста за границы */
+    font-size: 14px; /* Уменьшение размера шрифта для текста */
+    line-height: 1.5; /* Межстрочный интервал для удобства чтения */
+    text-align: left; /* Выравнивание текста по левому краю */
+}
+
+.panel input[type="text"],
+.panel input[type="number"] {
+    width: 100%; /* Полная ширина для всех полей ввода */
+    box-sizing: border-box;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.input-group, .formula-group {
+    display: flex; /* Убедитесь, что элементы располагаются в линию */
+    align-items: center; /* Выравнивание по центру по вертикали для группы ввода и формулы */
+    margin-bottom: 12px;
+}
+
+label {
+    margin-right: 10px;
+    font-weight: 600;
+    color: #4a4a4a;
+}
+
+input[type="number"] {
+    padding: 8px;
+    margin-right: 8px;
+    width: 70px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="number"]:focus {
+    border-color: #5a6e73;
+    box-shadow: 0px 0px 4px #5a6e73;
+    outline: none;
+}
+
+.button-container {
+    display: flex; /* Убедитесь, что кнопки располагаются в линию */
+    gap: 10px; /* Отступ между кнопками */
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    background-color: #d2a47e;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #b07d5a;
+}
+
+.cool-formula {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input_container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+<h1>Нефтеперерабатывающие предприятие</h1>
+<div class="container">
+
+    <div>
+        <!-- Обновляем кнопку -->
+        <button style="margin: 10px 0" id="toggleModeBtn" onclick="togglePage()">Переключить страницу</button>
+
+    </div>
+
+    <!-- Основные параметры -->
+    <button class="accordion">Начальные и минимальные значения</button>
+    <div class="panel" id="metricsFields"></div>
+
+    <!-- Ввод возмущений -->
+    <button class="accordion">Возмущения</button>
+    <div class="panel">
+        <h3>Ввод коэффициентов для возмущений:</h3>
+
+        <div class="formula-group">
+            <label>Опыт специалистов по проектированию установок (q1):</label>
+            <span>y =</span>
+            <input type="number" id="q1_a" placeholder="a" value="1">
+            <span>+</span>
+            <input type="number" id="q1_b" placeholder="b" value="2">
+            <span>sin(</span>
+            <input type="number" id="q1_c" placeholder="c" value="3">
+            <span>x +</span>
+            <input type="number" id="q1_d" placeholder="d" value="4">
+            <span>)</span>
+        </div>
+
+        <div class="formula-group">
+            <label>Опыт персонала на предприятии (q2):</label>
+            <span>y =</span>
+            <input type="number" id="q2_a" placeholder="a" value="1">
+            <span>+</span>
+            <input type="number" id="q2_b" placeholder="b" value="2">
+            <span>sin(</span>
+            <input type="number" id="q2_c" placeholder="c" value="3">
+            <span>x +</span>
+            <input type="number" id="q2_d" placeholder="d" value="4">
+            <span>)</span>
+        </div>
+
+        <div class="formula-group">
+            <label>Трудоемкость процессов переработки нефти (q3):</label>
+            <span>y =</span>
+            <input type="number" id="q3_a" placeholder="a" value="1">
+            <span>x^0.5 +</span>
+            <input type="number" id="q3_b" placeholder="b" value="2">
+        </div>
+
+        <div class="formula-group">
+            <label>Деловая репутация проектировщиков нефтеперерабатывающих технологий (q4):</label>
+            <span>y =</span>
+            <input type="number" id="q4_a" placeholder="a" value="1">
+            <span>+</span>
+            <input type="number" id="q4_b" placeholder="b" value="2">
+            <span>step(</span>
+            <input type="number" id="q4_c" placeholder="c" value="3">
+            <span>)</span>
+        </div>
+
+        <div class="formula-group">
+            <label>Деловая репутация организации, осуществляющей эксплуатацию нефтеперерабатывающего завода (q5):</label>
+            <span>y =</span>
+            <input type="number" id="q5_a" placeholder="a" value="1">
+            <span>x^0.5 +</span>
+            <input type="number" id="q5_b" placeholder="b" value="2">
+        </div>
+    </div>
+
+    <button class="accordion">Максимальные значения уровня функциональных возможностей (L*)</button>
+    <div class="panel" id="maxFunc"></div>
+
+    <!-- Новый аккордеон для набора строк с a0, a1, a2, a3 -->
+    <button class="accordion">Полиномы</button>
+    <div class="panel" id="additionalRows"></div>
+
+    <!-- Кнопки управления -->
+    <div style="margin-top: 20px;">
+        <button onclick="generateChart()">Сгенерировать диаграмму</button>
+        <button onclick="resetDefaults()">Сбросить</button>
+        <button onclick="clearInputs()">Очистить</button>
+        <button onclick="exportChart()">Экспортировать график</button>
+        <button onclick="deleteChart()">Удалить график</button>
+    </div>
+
+    <br>
+    <!-- Место для отображения диаграммы (по умолчанию скрыто) -->
+    <img id="radarChart" alt="Radar Chart" style="display:none; margin-top: 20px;">
+</div>
+
+<script>
+    const defaultValues = {
+        metrics: [0.7, 0.3, 0.4, 0.5, 0.7, 0.8, 0.4, 0.4, 0.4, 0.6, 0.8, 0.8, 0.5, 0.6, 0.3], // Значения по умолчанию для всех метрик
+        minMetrics: [0.2, 0.25, 0.35, 0.2, 0.2, 0.25, 0.2, 0.25, 0.2, 0.15, 0.25, 0.15, 0.4, 0.15, 0.35],
+		maxFunc: [3, 4, 5, 5, 3, 5, 4, 5, 5, 4, 7, 3, 6, 3, 4],
+        action: 'mode1',
+        disturbances: {
+            q1: { a: 0.5, b: 1, c: 2, d: 0 },
+            q2: { a: 0.3, b: 0.8, c: 2, d: 0.75 },
+            q3: { a: 0.2, b: 0.5 },
+            q4: { a: 0.1, b: 0.3, c: 0.5 },
+            q5: { a: 0.4, b: 0.6 }
+        },
+		additionalRows: {
+			f1: { a0: 3, a1: 7, i1: 1, a2: 8, i2: 1, a3: 5, i3: 1 },
+			f2: { a0: 2, a1: 9, i1: 1, a2: 6, i2: 1, a3: 6, i3: 1 },
+			f3: { a0: 3, a1: 8, i1: 1, a2: 8, i2: 1, a3: 6, i3: 1 },
+			f4: { a0: 2, a1: 7, i1: 1, a2: 1, i2: 1, a3: 4, i3: 1 },
+			f5: { a0: 5, a1: 1, i1: 1, a2: 6, i2: 1, a3: 7, i3: 1 },
+			f6: { a0: 3, a1: 7, i1: 1, a2: 7, i2: 1, a3: 7, i3: 1 },
+			f7: { a0: 7, a1: 9, i1: 1, a2: 7, i2: 1, a3: 8, i3: 1 },
+			f8: { a0: 4, a1: 9, i1: 1, a2: 8, i2: 1, a3: 4, i3: 1 },
+			f9: { a0: 9, a1: 8, i1: 1, a2: 7, i2: 1, a3: 4, i3: 1 },
+			f10: { a0: 8, a1: 7, i1: 1, a2: 4, i2: 1, a3: 8, i3: 1},
+			f11: { a0: 6, a1: 7, i1: 1, a2: 4, i2: 1, a3: 1, i3: 1},
+			f12: { a0: 5, a1: 1, i1: 1, a2: 2, i2: 1, a3: 4, i3: 1},
+			f13: { a0: 7, a1: 8, i1: 1, a2: 3, i2: 1, a3: 5, i3: 1},
+			f14: { a0: 1, a1: 1, i1: 1, a2: 2, i2: 1, a3: 5, i3: 1},
+			f15: { a0: 6, a1: 8, i1: 1, a2: 4, i2: 1, a3: 1, i3: 1},
+			f16: { a0: 8, a1: 2, i1: 1, a2: 9, i2: 1, a3: 4, i3: 1},
+			f17: { a0: 7, a1: 3, i1: 1, a2: 4, i2: 1, a3: 5, i3: 1},
+			f18: { a0: 5, a1: 6, i1: 1, a2: 4, i2: 1, a3: 7, i3: 1},
+			f19: { a0: 3, a1: 5, i1: 1, a2: 4, i2: 1, a3: 6, i3: 1},
+			f20: { a0: 6, a1: 9, i1: 1, a2: 4, i2: 1, a3: 5, i3: 1},
+			f21: { a0: 9, a1: 5, i1: 1, a2: 6, i2: 1, a3: 6, i3: 1},
+			f22: { a0: 6, a1: 3, i1: 1, a2: 7, i2: 1, a3: 6, i3: 1},
+			f23: { a0: 5, a1: 1, i1: 1, a2: 4, i2: 1, a3: 7, i3: 1},
+			f24: { a0: 8, a1: 1, i1: 1, a2: 5, i2: 1, a3: 3, i3: 1},
+			f25: { a0: 3, a1: 5, i1: 1, a2: 6, i2: 1, a3: 6, i3: 1},
+			f26: { a0: 2, a1: 1, i1: 1, a2: 2, i2: 1, a3: 7, i3: 1},
+			f27: { a0: 6, a1: 8, i1: 1, a2: 1, i2: 1, a3: 4, i3: 1},
+			f28: { a0: 3, a1: 2, i1: 1, a2: 3, i2: 1, a3: 4, i3: 1},
+			f29: { a0: 6, a1: 3, i1: 1, a2: 5, i2: 1, a3: 3, i3: 1},
+			f30: { a0: 6, a1: 4, i1: 1, a2: 6, i2: 1, a3: 1, i3: 1},
+			f31: { a0: 9, a1: 5, i1: 1, a2: 5, i2: 1, a3: 7, i3: 1},
+			f32: { a0: 8, a1: 8, i1: 1, a2: 4, i2: 1, a3: 6, i3: 1},
+			f33: { a0: 8, a1: 8, i1: 1, a2: 3, i2: 1, a3: 9, i3: 1},
+			f34: { a0: 6, a1: 9, i1: 1, a2: 2, i2: 1, a3: 7, i3: 1},
+			f35: { a0: 6, a1: 7, i1: 1, a2: 4, i2: 1, a3: 9, i3: 1},
+			f36: { a0: 1, a1: 2, i1: 1, a2: 5, i2: 1, a3: 6, i3: 1},
+			f37: { a0: 5, a1: 2, i1: 1, a2: 6, i2: 1, a3: 8, i3: 1},
+			f38: { a0: 3, a1: 8, i1: 1, a2: 9, i2: 1, a3: 8, i3: 1},
+			f39: { a0: 3, a1: 3, i1: 1, a2: 5, i2: 1, a3: 8, i3: 1},
+			f40: { a0: 5, a1: 5, i1: 1, a2: 3, i2: 1, a3: 4, i3: 1},
+			f41: { a0: 5, a1: 2, i1: 1, a2: 4, i2: 1, a3: 2, i3: 1},
+			f42: { a0: 2, a1: 4, i1: 1, a2: 2, i2: 1, a3: 8, i3: 1},
+			f43: { a0: 9, a1: 4, i1: 1, a2: 5, i2: 1, a3: 3, i3: 1},
+			f44: { a0: 6, a1: 7, i1: 1, a2: 5, i2: 1, a3: 5, i3: 1},
+			f45: { a0: 4, a1: 5, i1: 1, a2: 3, i2: 1, a3: 9, i3: 1},
+			f46: { a0: 5, a1: 4, i1: 1, a2: 4, i2: 1, a3: 2, i3: 1},
+			f47: { a0: 9, a1: 7, i1: 1, a2: 1, i2: 1, a3: 6, i3: 1},
+			f48: { a0: 6, a1: 8, i1: 1, a2: 7, i2: 1, a3: 8, i3: 1},
+			f49: { a0: 7, a1: 5, i1: 1, a2: 4, i2: 1, a3: 5, i3: 1},
+			f50: { a0: 9, a1: 1, i1: 1, a2: 9, i2: 1, a3: 2, i3: 1},
+			f51: { a0: 7, a1: 2, i1: 1, a2: 7, i2: 1, a3: 9, i3: 1},
+			f52: { a0: 6, a1: 4, i1: 1, a2: 9, i2: 1, a3: 3, i3: 1},
+			f53: { a0: 5, a1: 3, i1: 1, a2: 6, i2: 1, a3: 6, i3: 1},
+			f54: { a0: 2, a1: 3, i1: 1, a2: 9, i2: 1, a3: 5, i3: 1},
+			f55: { a0: 7, a1: 2, i1: 1, a2: 8, i2: 1, a3: 5, i3: 1},
+			f56: { a0: 8, a1: 6, i1: 1, a2: 8, i2: 1, a3: 7, i3: 1},
+			f57: { a0: 7, a1: 7, i1: 1, a2: 7, i2: 1, a3: 6, i3: 1},
+			f58: { a0: 9, a1: 1, i1: 1, a2: 3, i2: 1, a3: 2, i3: 1},
+			f59: { a0: 8, a1: 5, i1: 1, a2: 8, i2: 1, a3: 5, i3: 1},
+			f60: { a0: 3, a1: 6, i1: 1, a2: 1, i2: 1, a3: 9, i3: 1},
+			f61: { a0: 3, a1: 3, i1: 1, a2: 1, i2: 1, a3: 7, i3: 1},
+			f62: { a0: 2, a1: 1, i1: 1, a2: 2, i2: 1, a3: 5, i3: 1},
+			f63: { a0: 1, a1: 4, i1: 1, a2: 7, i2: 1, a3: 9, i3: 1},
+			f64: { a0: 7, a1: 4, i1: 1, a2: 8, i2: 1, a3: 1, i3: 1},
+			f65: { a0: 8, a1: 6, i1: 1, a2: 4, i2: 1, a3: 5, i3: 1},
+			f66: { a0: 9, a1: 7, i1: 1, a2: 6, i2: 1, a3: 2, i3: 1},
+			f67: { a0: 9, a1: 4, i1: 1, a2: 3, i2: 1, a3: 1, i3: 1},
+			f68: { a0: 1, a1: 7, i1: 1, a2: 5, i2: 1, a3: 3, i3: 1},
+			f69: { a0: 4, a1: 8, i1: 1, a2: 3, i2: 1, a3: 7, i3: 1},
+			f70: { a0: 9, a1: 5, i1: 1, a2: 8, i2: 1, a3: 1, i3: 1},
+			f71: { a0: 7, a1: 5, i1: 1, a2: 2, i2: 1, a3: 5, i3: 1},
+			f72: { a0: 5, a1: 6, i1: 1, a2: 6, i2: 1, a3: 8, i3: 1},
+			f73: { a0: 5, a1: 3, i1: 1, a2: 7, i2: 1, a3: 2, i3: 1},
+			f74: { a0: 3, a1: 4, i1: 1, a2: 9, i2: 1, a3: 9, i3: 1},
+			f75: { a0: 9, a1: 8, i1: 1, a2: 3, i2: 1, a3: 6, i3: 1},
+			f76: { a0: 3, a1: 3, i1: 1, a2: 7, i2: 1, a3: 3, i3: 1},
+			f77: { a0: 9, a1: 6, i1: 1, a2: 9, i2: 1, a3: 5, i3: 1},
+			f78: { a0: 9, a1: 6, i1: 1, a2: 5, i2: 1, a3: 8, i3: 1},
+			f79: { a0: 5, a1: 6, i1: 1, a2: 7, i2: 1, a3: 6, i3: 1},
+			f80: { a0: 5, a1: 8, i1: 1, a2: 4, i2: 1, a3: 9, i3: 1},
+			f81: { a0: 4, a1: 4, i1: 1, a2: 7, i2: 1, a3: 1, i3: 1},
+			f82: { a0: 7, a1: 6, i1: 1, a2: 6, i2: 1, a3: 9, i3: 1},
+			f83: { a0: 8, a1: 6, i1: 1, a2: 9, i2: 1, a3: 8, i3: 1},
+			f84: { a0: 3, a1: 4, i1: 1, a2: 8, i2: 1, a3: 9, i3: 1},
+			f85: { a0: 2, a1: 8, i1: 1, a2: 1, i2: 1, a3: 6, i3: 1},
+			f86: { a0: 2, a1: 2, i1: 1, a2: 7, i2: 1, a3: 2, i3: 1},
+			f87: { a0: 9, a1: 2, i1: 1, a2: 3, i2: 1, a3: 8, i3: 1},
+			f88: { a0: 9, a1: 9, i1: 1, a2: 7, i2: 1, a3: 5, i3: 1},
+			f89: { a0: 9, a1: 3, i1: 1, a2: 6, i2: 1, a3: 6, i3: 1},
+			f90: { a0: 7, a1: 7, i1: 1, a2: 9, i2: 1, a3: 9, i3: 1},
+			f91: { a0: 6, a1: 8, i1: 1, a2: 6, i2: 1, a3: 9, i3: 1},
+			f92: { a0: 5, a1: 7, i1: 1, a2: 7, i2: 1, a3: 5, i3: 1},
+			f93: { a0: 7, a1: 4, i1: 1, a2: 8, i2: 1, a3: 6, i3: 1},
+			f94: { a0: 7, a1: 3, i1: 1, a2: 2, i2: 1, a3: 2, i3: 1},
+			f95: { a0: 5, a1: 2, i1: 1, a2: 2, i2: 1, a3: 7, i3: 1},
+			f96: { a0: 7, a1: 4, i1: 1, a2: 1, i2: 1, a3: 3, i3: 1},
+			f97: { a0: 6, a1: 5, i1: 1, a2: 1, i2: 1, a3: 2, i3: 1},
+			f98: { a0: 6, a1: 2, i1: 1, a2: 5, i2: 1, a3: 9, i3: 1}
+		}
+    };
+
+    const metricsList = [
+        { id: 'L1', name: 'Сопровождаемость технологических процессов' },
+        { id: 'L2', name: 'Анализируемость производственных данных' },
+        { id: 'L3', name: 'Изменяемость технологических параметров' },
+        { id: 'L4', name: 'Тестируемость оборудования' },
+        { id: 'L5', name: 'Согласованность процессов переработки' },
+        { id: 'L6', name: 'Читабельность документации' },
+        { id: 'L7', name: 'Уровень автоматизации процессов' },
+        { id: 'L8', name: 'Регистрация изменений в технологическом процессе' },
+        { id: 'L9', name: 'Стабильность производственных показателей' },
+        { id: 'L10', name: 'Уровень используемого программного обеспечения' },
+        { id: 'L11', name: 'Комментарии к технологическим регламентам' },
+        { id: 'L12', name: 'Регистрация процесса выполнения операций' },
+        { id: 'L13', name: 'Использование инструментов для контроля качества' },
+        { id: 'L14', name: 'Требования к документации по технологиям' },
+        { id: 'L15', name: 'Дефекты после модификации оборудования' },
+
+    ];
+
+    // Генерация полей для метрик
+    function generateMetricFields() {
+        const metricsFields = document.getElementById('metricsFields');
+        metricsFields.innerHTML = '';
+
+        const header = document.createElement('h3');
+        header.textContent = 'Начальные и минимальные значения';
+        metricsFields.appendChild(header);
+
+        metricsList.forEach((metric, index) => {
+            const div = document.createElement('div');
+            div.className = 'metric-container';
+
+            div.innerHTML = `
+                <div class="input-group">
+                    <label>${metric.name} (${metric.id}):</label>
+                    <input type="number" id="metric${index + 1}" placeholder="${metric.id}" value="${defaultValues.metrics[index]}" min="0" max="1">
+                    <label>Min ${metric.id}:</label>
+                    <input type="number" id="minMetric${index + 1}" placeholder="Min ${metric.id}" value="${defaultValues.minMetrics[index]}" min="0" max="1">
+                </div>
+            `;
+
+            metricsFields.appendChild(div);
+        });
+    }
+
+	// Генерация строк с коэффициентами (a0, a1, a2, a3)
+    function generateAdditionalRows() {
+        const additionalRows = document.getElementById('additionalRows');
+        additionalRows.innerHTML = '';
+
+        const header = document.createElement('h3');
+        header.textContent = 'Функции';
+        additionalRows.appendChild(header);
+
+        for (let i = 1; i <= 98; i++) {
+			const div = document.createElement('div');
+			div.className = 'input-group';
+
+			// Доступ к значениям из additionalRows[f{i}]
+			const a0 = defaultValues.additionalRows[`f${i}`].a0;
+			const a1 = defaultValues.additionalRows[`f${i}`].a1;
+            const i1 = defaultValues.additionalRows[`f${i}`].i1;
+			const a2 = defaultValues.additionalRows[`f${i}`].a2;
+            const i2 = defaultValues.additionalRows[`f${i}`].i2;
+			const a3 = defaultValues.additionalRows[`f${i}`].a3;
+            const i3 = defaultValues.additionalRows[`f${i}`].i3;
+
+
+
+			div.innerHTML = `
+				<label>f${i}:</label>
+				<input type="number" id="a0_row${i}" value="${a0}" min="1" max="9" placeholder="a0"> <div>+</div>
+				<input type="number" id="a1_row${i}" value="${a1}" min="1" max="9" placeholder="a1"> <div>L${addIndex(i1)}(t)</div> <div>+</div>
+				<input type="number" id="a2_row${i}" value="${a2}" min="1" max="9" placeholder="a2"> <div>L${addIndex(i2)}(t)${addStepen(2)}</div> <div>+</div>
+				<input type="number" id="a3_row${i}" value="${a3}" min="1" max="9" placeholder="a3"> <div>L${addIndex(i3)}(t)${addStepen(3)} </div>
+			`;
+
+			additionalRows.appendChild(div);
+		}
+
+    }
+
+    function addIndex(index) {
+        return `<sub>${index}</sub>`
+    }
+
+    function addStepen(index) {
+        return `<sup>${index}</sup>`
+    }
+
+	function generateMaxFunc() {
+		const maxFuncs = document.getElementById('maxFunc');
+        maxFuncs.innerHTML = ''; // Очищаем поле
+
+        const header = document.createElement('h3');
+        header.textContent = 'Максимальные значения уровня функциональных возможностей (L*)';
+        maxFuncs.appendChild(header);
+
+		metricsList.forEach((metric, index) => {
+            const div = document.createElement('div');
+            div.className = 'metric-container';
+
+            div.innerHTML = `
+                <div class="input-group">
+                    <label>${metric.name} (${metric.id}*):</label>
+                    <input type="number" id="maxFunc${index + 1}" placeholder="${metric.id}*" value="${defaultValues.maxFunc[index]}" min="1">
+                </div>
+            `;
+
+            maxFuncs.appendChild(div);
+        });
+	}
+
+
+    // Инициализация при загрузке страницы
+    window.onload = function() {
+        generateMetricFields();
+		generateMaxFunc();
+		generateAdditionalRows();
+		resetDefaults();
+        setupAccordion();
+    };
+
+    // Переменная для хранения текущего режима
+    let currentMode = 1;
+
+    // Функция для переключения режимов
+    function toggleModes() {
+        currentMode = currentMode === 1 ? 2 : 1; // Переключаемся между 1 и 2
+        document.getElementById('modeDisplay').innerText = `Текущий режим: Режим ${currentMode}`;
+        document.getElementById('toggleModeBtn').innerText = `Переключить на Режим ${currentMode === 1 ? 2 : 1}`;
+        defaultValues.action = currentMode === 1 ? 'mode1' : 'mode2'; // Обновляем действие в JSON
+    }
+
+    // Генерация диаграммы
+    function generateChart() {
+        const metrics = [];
+        const minMetrics = [];
+		const maxFuncs = [];
+
+        // Собираем значения метрик в массив
+        for (let i = 1; i <= 15; i++) {
+            metrics.push(document.getElementById(`metric${i}`).value);
+            minMetrics.push(document.getElementById(`minMetric${i}`).value);
+			maxFuncs.push(document.getElementById(`maxFunc${i}`).value);
+        }
+
+
+        // Собираем значения для возмущений
+        const disturbances = {
+            q1: {
+                a: document.getElementById('q1_a').value,
+                b: document.getElementById('q1_b').value,
+                c: document.getElementById('q1_c').value,
+                d: document.getElementById('q1_d').value
+            },
+            q2: {
+                a: document.getElementById('q2_a').value,
+                b: document.getElementById('q2_b').value,
+                c: document.getElementById('q2_c').value,
+                d: document.getElementById('q2_d').value
+            },
+            q3: {
+                a: document.getElementById('q3_a').value,
+                b: document.getElementById('q3_b').value
+            },
+            q4: {
+                a: document.getElementById('q4_a').value,
+                b: document.getElementById('q4_b').value,
+                c: document.getElementById('q4_c').value
+            },
+            q5: {
+                a: document.getElementById('q5_a').value,
+                b: document.getElementById('q5_b').value
+            }
+        };
+
+		const additionalRows = {};
+		for (let i = 1; i <= 98; i++) {
+			additionalRows[`f${i - 1}`] = {
+				a0: document.getElementById(`a0_row${i}`).value,
+				a1: document.getElementById(`a1_row${i}`).value,
+				a2: document.getElementById(`a2_row${i}`).value,
+				a3: document.getElementById(`a3_row${i}`).value
+			};
+		}
+
+		const metricsName = metricsList.map((metric, index) => (
+			metric.name
+		));
+
+
+		console.log(maxFuncs);
+
+        // Формируем параметры для запроса
+        const data = {
+			metrics: metrics,
+			metricsName: metricsName,
+			minMetrics: minMetrics,
+			maxFuncs: maxFuncs,
+			disturbances: disturbances,
+			additionalRows: additionalRows,
+            action: defaultValues.action // Добавляем действие в JSON
+		};
+
+
+        // Отправляем запрос на сервер
+
+
+// ПОМЕНЯТЬ ССЫЛКУ НА ЗАДЕПЛОЕННОЕ ПРИЛОЖЕНИЕ!!!!!!!!!!!!!
+
+
+        fetch('https://qualitycalc-2l3u.onrender.com/npz-chart', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+			})
+            .then(response => response.blob())  // Получаем бинарные данные (blob) из ответа
+            .then(blob => {
+                const imageUrl = URL.createObjectURL(blob);  // Создаем URL для изображения
+                document.getElementById('radarChart').style.display = 'block';  // Показываем изображение
+                document.getElementById('radarChart').src = imageUrl;  // Устанавливаем изображение
+            })
+            .catch(error => console.error('Error fetching radar chart:', error));
+    }
+
+    // Функция сброса всех параметров к дефолтным значениям
+    function resetDefaults() {
+        for (let i = 1; i <= 15; i++) {
+            document.getElementById(`metric${i}`).value = defaultValues.metrics[i - 1];
+            document.getElementById(`minMetric${i}`).value = defaultValues.minMetrics[i - 1];
+			document.getElementById(`maxFunc${i}`).value = defaultValues.maxFunc[i - 1];
+        }
+
+        document.getElementById('q1_a').value = defaultValues.disturbances.q1.a;
+        document.getElementById('q1_b').value = defaultValues.disturbances.q1.b;
+        document.getElementById('q1_c').value = defaultValues.disturbances.q1.c;
+        document.getElementById('q1_d').value = defaultValues.disturbances.q1.d;
+
+        document.getElementById('q2_a').value = defaultValues.disturbances.q2.a;
+        document.getElementById('q2_b').value = defaultValues.disturbances.q2.b;
+        document.getElementById('q2_c').value = defaultValues.disturbances.q2.c;
+        document.getElementById('q2_d').value = defaultValues.disturbances.q2.d;
+
+        document.getElementById('q3_a').value = defaultValues.disturbances.q3.a;
+        document.getElementById('q3_b').value = defaultValues.disturbances.q3.b;
+
+        document.getElementById('q4_a').value = defaultValues.disturbances.q4.a;
+        document.getElementById('q4_b').value = defaultValues.disturbances.q4.b;
+        document.getElementById('q4_c').value = defaultValues.disturbances.q4.c;
+
+        document.getElementById('q5_a').value = defaultValues.disturbances.q5.a;
+        document.getElementById('q5_b').value = defaultValues.disturbances.q5.b;
+
+		// Сбрасываем доп. строки
+        for (let i = 1; i <= 98; i++) {
+            document.getElementById(`a0_row${i}`).value = defaultValues.additionalRows[`f${i}`].a0;
+            document.getElementById(`a1_row${i}`).value = defaultValues.additionalRows[`f${i}`].a1;
+            document.getElementById(`a2_row${i}`).value = defaultValues.additionalRows[`f${i}`].a2;
+            document.getElementById(`a3_row${i}`).value = defaultValues.additionalRows[`f${i}`].a3;
+        }
+    }
+
+    // Функция для очистки всех инпутов
+    function clearInputs() {
+        for (let i = 1; i <= 15; i++) {
+            document.getElementById(`metric${i}`).value = '';
+            document.getElementById(`minMetric${i}`).value = '';
+			document.getElementById(`maxFunc${i}`).value = '';
+        }
+
+        document.getElementById('q1_a').value = '';
+        document.getElementById('q1_b').value = '';
+        document.getElementById('q1_c').value = '';
+        document.getElementById('q1_d').value = '';
+
+        document.getElementById('q2_a').value = '';
+        document.getElementById('q2_b').value = '';
+        document.getElementById('q2_c').value = '';
+        document.getElementById('q2_d').value = '';
+
+        document.getElementById('q3_a').value = '';
+        document.getElementById('q3_b').value = '';
+
+        document.getElementById('q4_a').value = '';
+        document.getElementById('q4_b').value = '';
+        document.getElementById('q4_c').value = '';
+
+        document.getElementById('q5_a').value = '';
+        document.getElementById('q5_b').value = '';
+
+		// Очищаем доп. строки
+        for (let i = 1; i <= 98; i++) {
+            document.getElementById(`a0_row${i}`).value = '';
+            document.getElementById(`a1_row${i}`).value = '';
+            document.getElementById(`a2_row${i}`).value = '';
+            document.getElementById(`a3_row${i}`).value = '';
+        }
+    }
+
+    // Экспорт графика (сохранение изображения)
+    function exportChart() {
+        const chartImg = document.getElementById('radarChart');
+
+        if (chartImg.src) {
+            const link = document.createElement('a');
+            link.href = chartImg.src;
+            link.download = 'radar_chart.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            alert('Сначала сгенерируйте график!')
+        }
+    }
+
+    // Аккордеон для раскрытия панелей
+    function setupAccordion() {
+    const accordions = document.getElementsByClassName('accordion');
+    for (let i = 0; i < accordions.length; i++) {
+        accordions[i].style.display = 'none'; // Скрываем кнопки аккордеона
+        }
+    }
+
+
+    function togglePage() {
+        // Получаем текущий URL
+        const currentPage = window.location.pathname;
+
+        // Проверяем, на какой странице мы сейчас
+        if (currentPage.endsWith("index.html") || currentPage.endsWith("/")) {
+            // Если это index.html, переходим на lab2.html
+            window.location.href = "lab2.html";
+        } else if (currentPage.endsWith("lab2.html")) {
+            // Если это lab2.html, переходим обратно на index.html
+            window.location.href = "index.html";
+        }
+    }
+
+
+	function deleteChart() {
+		document.getElementById('radarChart').style.display = 'none';
+	}
+</script>
+
+</body>
+</html>

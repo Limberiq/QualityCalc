@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  backend:
+    image: backend:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - dock_net
+networks:
+  dock_net:
+    driver: bridge
